@@ -11,6 +11,8 @@ public class MoveController : MonoBehaviour
     private float speed;
 
     private bool isFacingRight;
+
+    private GameObject triggerObject;
     // Start is called before the first frame update
     void Start()
     {
@@ -27,6 +29,14 @@ public class MoveController : MonoBehaviour
             Flip();
     }
 
+    void OnInteract()
+    {
+        if (triggerObject)
+        {
+            triggerObject.SendMessage("OnInteract", SendMessageOptions.DontRequireReceiver);
+        }
+    }
+
     void Flip()
     {
         isFacingRight = !isFacingRight;
@@ -35,8 +45,10 @@ public class MoveController : MonoBehaviour
         transform.localScale = theScale;
     }
 
-        void FixedUpdate()
+    void FixedUpdate()
     {
         rb.position += (move * speed * Time.fixedDeltaTime);
     }
+    void OnTriggerEnter2D(Collider2D collision) => triggerObject = collision.gameObject;
+    void OnTriggerExit2D(Collider2D collision) => triggerObject = null;
 }
